@@ -1,0 +1,39 @@
+<!DOCTYPE HTML>
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;" name="viewport" />
+    <title>半个圆</title>
+	<style>
+		.wrapper{
+			margin:0 auto;
+			text-align:center;
+		}
+		#canvas{
+			border:1px solid #000;
+		}
+	</style>
+</head>
+<body>
+	<div class="wrapper">
+		<!--canvas 的大小需要在标签上声明，用样式是不行的-->
+		<canvas id="canvas" width="500" height="300">
+			<div>hey 浏览器不支持</div>
+		</canvas>
+	</div>
+	<script>
+		window.onload=function(){
+			var canvas = document.getElementById("canvas");
+			if(!canvas.getContext){
+				return;
+			}
+			var ctx = canvas.getContext("2d");
+			ctx.beginPath();
+			ctx.arc(250,150,100,0,Math.PI,false);
+			ctx.strokeStyle="red";
+			ctx.lineWidth="1";
+			ctx.stroke();
+			ctx.closePath();
+		}
+	</script>
+</body>
+</html>
