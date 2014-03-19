@@ -24,7 +24,7 @@ LIT.define("comp/boreball/movfun/autoBallMove",function($){
 			y:0,
 			heigh:0
 		},
-		G = 9.8*10;
+		G = 9.8*60;
 		
 		
 		var getX = function(t){
@@ -87,7 +87,7 @@ LIT.define("comp/boreball/movfun/autoBallMove",function($){
 			}
 			var moveTime = (t - ballObj.lastDate)/1000;
 			var totalRangle = Math.abs(circle.endAngle - circle.startAngle),
-				totalLength =  totalRangle * Math.PI * circle.radius;
+				totalLength =  totalRangle * Math.PI * circle.radius/2;
 			// 从左边入手
 			if(ball.x > circle.x && moveTime ==0){
 				xObj.flag = -1;
