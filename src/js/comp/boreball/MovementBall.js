@@ -31,8 +31,9 @@ LIT.define("comp/boreball/MovementBall", function($){
         }
         _this.canvas = canvas;
         _this.ctx = canvas.getContext("2d");
+		_this.radius = _this.param.ballRadius;
         // 球的圆点的位置
-        _this.init();
+		_this.init();
         _this.move();
     };
 	
