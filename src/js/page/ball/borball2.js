@@ -13,9 +13,11 @@ LIT.define("page/ball/borball1",function($){
 		startX:350,
 		startY:50,
 		
-		pointX:300,
+		pointX:320,
 		pointY:240,
-		radius:50
+		radius:30,
+		
+		ballRadius:5
 	});
 	var range = $("#range");
 	made.create(range.val());
@@ -26,9 +28,10 @@ LIT.define("page/ball/borball1",function($){
 		made.create(this.value);
 	})
 	var oneCircle = circle(canvas,{
-		x:300,
+		x:320,
 		y:240,
-		radius:60
+		color:"#818181",
+		radius:32.5
 	});
 	oneCircle.draw();
 	made.onDraw.push(function(){
