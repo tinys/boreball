@@ -1,1 +1,96 @@
-LIT.define("comp/boreball/MovementBall",function(e){var t=function(e,t,n){var r=this;r.param={pointX:0,pointY:0,radius:100,time:1e3,color:"#000",ballRadius:10,x:0,y:0};if(t)for(var i in t)r.param[i]=t[i];n&&n(r),r.canvas=e,r.ctx=e.getContext("2d"),r.radius=r.param.ballRadius,r.init(),r.move()};return t.prototype={mometion:function(e){var t=this,n=e*360*Math.PI/180,r=Math.cos(n)*t.distance,i=Math.sin(n)*t.distance;return{x:t.param.pointX+r,y:t.param.pointY+i}},init:function(){var e=this;!e.param.x&&!e.param.y&&(e.x=e.param.pointX+e.param.radius-e.param.ballRadius/2,e.y=e.param.pointY),e.distance=Math.sqrt(Math.pow(Math.abs(e.x-e.param.pointX),2)+Math.pow(Math.abs(e.y-e.param.pointY),2))},move:function(e,t){var n=this;n.startTime||(n.startTime=Date.now()),t=t||Date.now();var r=t-n.startTime;e=e||r/n.param.time;var i=n.mometion(e,t);return i&&(n.x=i.x,n.y=i.y,n._draw()),i},_draw:function(){var e=this,t=e.ctx;t.beginPath(),t.arc(e.x,e.y,e.param.ballRadius,0,Math.PI*2,!1),t.fillStyle=e.param.color,t.lineWidth="1",t.fill(),t.closePath()},isStop:function(){return!1},destroy:function(){var e=this;e.ctx=null,e.canvas=null}},t}),LIT.define("comp/boreball/madeBalls",function(e){var t=e.require("comp/boreball/MovementBall");return function(n,r,i,s,o){var u={ballList:[],onDraw:[],init:function(e,t,n,r){var i=this;i.canvas=e,i.ctx=e.getContext("2d"),i.width=t,i.height=n,i.movefuns=r,i.param={pointX:250,pointY:150,radius:100,time:2e3};if(o)for(var s in o)i.param[s]=o[s]},create:function(e){var n=this,r=["#91caf1","#bad5de","#cbd2b3","#c0bf9d","#aba398","#818181","#929190"],i=function(e){var i={color:r[e]||"#929190",ballRadius:10};for(var s in n.param)i[s]=n.param[s];var o=new t(n.canvas,i,n.movefuns);n.ballList.push(o)},s=0,o=function(){if(e<=0)return;e--,i(s++),n.createTimeout=setTimeout(function(){o()},60)};o(),n.loop()},clearAll:function(){var e=this;e.ctx.clearRect(0,0,e.width,e.height)},_draw:function(){var e=this,t=e.ballList.length;e.start||(e.start=Date.now());var n=Date.now(),r=e.start-n,i=r/200;return i>1&&(i%=e.param.time),e.ballList.forEach(function(e,r){if(!e.isStop()){e.move(i,n);return}t--}),e.onDraw.forEach(function(t,n){t.apply(e)}),t>0},clear:function(){var e=this;e.createTimeout&&clearTimeout(e.createTimeout),e.ballList.length=0,e.clearAll()},loop:function(){var t=this;t.clearAll(),t._draw()&&e.nextFrame(function(){t.loop()})}};return u.init(n,r,i,s),u}}),LIT.define("comp/boreball/movfun/autoBallMove",function(e){return function(e){var t={flag:-1,rate:0,lastDate:0,start:0},n={flag:1,lastDate:0,rate:0,start:0,maxRate:0},r={lastDate:0},i={x:0,y:0,heigh:0},s=98,o=function(e){var n=(e-t.lastDate)/1e3;return t.start+t.rate*n*t.flag},u=function(e){var t=(e-n.lastDate)/1e3;return n.flag>0?n.start+s*Math.pow(t,2)/2:n.start-n.rate*t+s*Math.pow(t,2)/2},a=function(e){var t=(e-n.lastDate)/1e3;n.flag>0?(n.rate=s*t,n.maxRate=Math.max(n.maxRate,n.rate)):n.rate=n.maxRate-s*t},f=function(i,s){r.lastDate||(r.lastDate=s);if(!c(e,i)){e.inBox=!1,n.flag=-1;var o=0;return e.x>=i.x&&(i.startAngle>0?t.flag=1:t.flag=-1,o=i.startAngle),e.x<i.x&&(i.endAngle>Math.PI?t.flag=1:t.flag=-1,o=i.endAngle),t.rate=Math.abs(Math.sin(o)*n.maxRate),n.rate=Math.abs(Math.cos(o)*n.maxRate),t.lastDate=s,n.lastDate=s,n.start=e.y,t.start=e.x,!1}var u=(s-r.lastDate)/1e3,a=Math.abs(i.endAngle-i.startAngle),f=a*Math.PI*i.radius;e.x>i.x&&u==0&&(t.flag=-1);var o=0;return t.flag>0?o=i.endAngle-n.maxRate*u/f*a:o=i.startAngle+n.maxRate*u/f*a,{x:i.x+Math.cos(o)*(i.radius-e.radius),y:i.y+Math.sin(o)*(i.radius-e.radius)}},l=e.param.circleList,c=function(e,t){var n=e.x-t.x,r=e.y-t.y,i=Math.sqrt(Math.pow(n,2)+Math.pow(r,2));if(i<=e.radius+t.radius){var s=0;if(r<0){s=Math.PI*2-Math.acos(n/i);var o=t.startAngle;o<0&&n>0&&(s=-Math.acos(n/i))}else s=Math.acos(n/i);if(s>=t.startAngle&&s<=t.endAngle)return!0}return!1};e.init=function(){t.start=e.param.startX,n.start=e.param.startY,i.x=e.param.startX,i.y=e.param.startY},e.mometion=function(h,p){p=p||Date.now(),t.lastDate||(t.lastDate=p,n.lastDate=p),e.inBox||l.forEach(function(t,o){if(c(e,t))return e.inBox=t,r.lastDate=p,n.maxRate=s*Math.sqrt(Math.abs(i.y-e.y-e.radius)*2/s),!1});if(e.inBox){var d=f(e.inBox,p);if(d)return d}else a(p);var v=o(p),m=u(p);return{x:v,y:m}},e.isStop=function(){return e.x<0||e.x>e.canvas.width||e.y<0&&e.y>e.canvas.height}}}),LIT.define("comp/boreball/circle",function(e){return function(t,n){var r={x:0,y:0,color:"red",radius:10,startAngle:0,endAngle:Math.PI*2};r=e.extend(r,n);var i={draw:function(){var e=t.getContext("2d");e.beginPath(),e.arc(r.x,r.y,r.radius,r.startAngle,r.endAngle,!1),e.strokeStyle=r.color,e.lineWidth="1",e.stroke(),e.closePath()}};return e.extend(i,r),i}}),LIT.define("page/ball/borball1",function(e){var t=e.require("comp/boreball/madeBalls"),n=e.require("comp/boreball/movfun/autoBallMove"),r=e.require("comp/boreball/circle"),i=document.getElementById("canvas");if(!i.getContext)return;var s=r(i,{x:60,y:190,color:"#818181",radius:30,startAngle:Math.PI/8,endAngle:Math.PI*3.7/3}),o=r(i,{x:140,y:196,color:"#818181",radius:25,startAngle:0,endAngle:Math.PI*8/7}),u=r(i,{x:216,y:192,color:"#818181",radius:30,startAngle:-Math.PI/3,endAngle:Math.PI}),a=function(e,t,n){var r=e.x,s=e.y,o=e.radius;n=n||s+o+10,t=t||10;var u=i.getContext("2d");u.beginPath(),u.moveTo(r,s+o),u.lineTo(r,n),u.strokeStyle="#818181",u.lineWidth="1",u.stroke(),u.moveTo(r-t/2,n),u.lineTo(r+t/2,n),u.stroke(),u.closePath()},f=function(){s.draw(),o.draw(),u.draw(),a(s,10,230),a(o,10,230),a(u,10,230)};f();var l=t(i,i.width,i.height,n,{startX:160,startY:90,pointX:140,pointY:190,radius:25,ballRadius:5,circleList:[s,o,u]});l.create(1),l.onDraw.push(function(){f()});var c=e("#range");c.bind("change",function(){l.clear(),e("#showNumber").html(this.value),l.create(this.value)})})
+
+
+LIT.define("page/ball/borball1",function($){
+	var madeBall = $.require("comp/boreball/madeBalls"),
+		freeFall = $.require("comp/boreball/movfun/autoBallMove"),
+		circle = $.require("comp/boreball/circle");
+	
+	var canvas = document.getElementById("canvas");
+	if(!canvas.getContext){
+		return;
+	}
+	var circle1 = circle(canvas,{
+		x:58,
+		y:190,
+		color:"#818181",
+		radius:30,
+		startAngle:Math.PI/8,
+		endAngle:Math.PI*3.7/3
+	});
+	
+	
+	var circle2 = circle(canvas,{
+		x:140,
+		y:196,
+		color:"#818181",
+		radius:25,
+		startAngle:0,
+		endAngle:Math.PI*8/7
+	});
+	
+	
+	var circle3 = circle(canvas,{
+		x:221,
+		y:192,
+		color:"#818181",
+		radius:30,
+		startAngle:-Math.PI/3,
+		endAngle:Math.PI
+	});
+	
+	
+	var drawBottom = function(circle,lastW,lastY){
+		var x = circle.x,y = circle.y,radius = circle.radius;
+		lastY = lastY || y+radius+10;
+		lastW = lastW || 10;
+		var ctx = canvas.getContext("2d");
+		ctx.beginPath();
+		ctx.moveTo(x,y+radius);
+		ctx.lineTo(x,lastY);
+		ctx.strokeStyle="#818181";
+		ctx.lineWidth="1";
+		ctx.stroke();
+		
+		ctx.moveTo(x-lastW/2,lastY);
+		ctx.lineTo(x+lastW/2,lastY);
+		ctx.stroke();
+		
+		ctx.closePath();
+	}
+	var drawCanvas = function(){
+		circle1.draw();
+		circle2.draw();
+		circle3.draw();
+		drawBottom(circle1,10,230);
+		drawBottom(circle2,10,230);
+		drawBottom(circle3,10,230);
+	}
+	
+	
+	drawCanvas();
+	
+	
+	// 驱动小球
+	var made = madeBall(canvas,canvas.width,canvas.height,freeFall,{
+		startX:160,
+		startY:90,
+		
+		pointX:140,
+		pointY:190,
+		radius:25,
+		
+		ballRadius:5,
+		circleList:[circle1,circle2,circle3]
+	});
+	made.create(1);
+	made.onDraw.push(function(){
+		drawCanvas();
+	})
+	
+	var range = $("#range");
+	range.bind("change",function(){
+		made.clear();
+		$("#showNumber").html(this.value);
+		made.create(this.value);
+	})
+})
