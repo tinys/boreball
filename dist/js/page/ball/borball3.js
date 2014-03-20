@@ -14,7 +14,7 @@ LIT.define("page/ball/borball1",function($){
 		y:190,
 		color:"#818181",
 		radius:30,
-		startAngle:Math.PI/8,
+		startAngle:Math.PI/9,
 		endAngle:Math.PI*3.7/3
 	});
 	
@@ -25,7 +25,7 @@ LIT.define("page/ball/borball1",function($){
 		color:"#818181",
 		radius:25,
 		startAngle:0,
-		endAngle:Math.PI*8/7
+		endAngle:Math.PI*12/11
 	});
 	
 	
@@ -34,7 +34,7 @@ LIT.define("page/ball/borball1",function($){
 		y:192,
 		color:"#818181",
 		radius:30,
-		startAngle:-Math.PI/3,
+		startAngle:-Math.PI/3.5,
 		endAngle:Math.PI
 	});
 	
@@ -73,7 +73,7 @@ LIT.define("page/ball/borball1",function($){
 	// 驱动小球
 	var made = madeBall(canvas,canvas.width,canvas.height,freeFall,{
 		startX:160,
-		startY:90,
+		startY:10,
 		
 		pointX:140,
 		pointY:190,

@@ -89,8 +89,12 @@ LIT.define("comp/boreball/movfun/autoBallMove",function($){
 			var totalRangle = Math.abs(circle.endAngle - circle.startAngle),
 				totalLength =  totalRangle * Math.PI * circle.radius/4;
 			// 从左边入手
-			if(ball.x > circle.x && moveTime ==0){
-				xObj.flag = -1;
+			if(moveTime ==0){
+				if(ball.x > circle.x){
+					xObj.flag = -1;
+				}else{
+					xObj.flag = 1;
+				}
 			}
 			var angle = 0;
 			if(xObj.flag > 0){
